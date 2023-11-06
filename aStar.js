@@ -46,7 +46,7 @@ function pathFinding(start, end, trafficWeight) {
     closeSet.push(current);
 
     for (let neighbor of current.neighbors) {
-      if (closeSet.includes(neighbor) == false && neighbor.wall == false) {
+      if (!closeSet.includes(neighbor) && !neighbor.wall && !isWallInBetween(current, neighbor)) {
         neighbor.h =
           sqrt((neighbor.i - end.i) ** 2 + (neighbor.j - end.j) ** 2) * 3;
         if (neighbor.water == true) {
@@ -212,4 +212,26 @@ function drawRoutes() {
     vertex(route[route.length-1].x , route[route.length-1].y );
     endShape();
   }
+}
+
+function isWallInBetween(tile1, tile2) {
+  // If it is a knight move
+  if ((Math.abs(tile1.i - tile2.i) === 2 && Math.abs(tile1.j - tile2.j) === 1) ||
+      (Math.abs(tile1.i - tile2.i) === 1 && Math.abs(tile1.j - tile2.j) === 2)) {
+
+      // Check for walls in the middle squares that could block the knight move
+      const orthogonal1 = grid[tile1.i][tile2.j];
+      const orthogonal2 = grid[tile2.i][tile1.j];
+      return (orthogonal1?.wall || orthogonal2?.wall) ||
+             (grid[tile1.i][Math.floor((tile1.j + tile2.j) / 2)]?.wall ||
+              grid[Math.floor((tile1.i + tile2.i) / 2)][tile1.j]?.wall ||
+              grid[Math.floor((tile1.i + tile2.i) / 2)][tile2.j]?.wall);
+  }
+
+  // If it is a diagonal move
+  if (Math.abs(tile1.i - tile2.i) === 1 && Math.abs(tile1.j - tile2.j) === 1) {
+      return grid[tile1.i][tile2.j]?.wall || grid[tile2.i][tile1.j]?.wall;
+  }
+
+  return false;
 }

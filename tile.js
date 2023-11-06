@@ -192,6 +192,12 @@ function tiling() {
 }
 
 function addNeighbors() {
+  const knightMoves = [
+    { i: -2, j: -1 }, { i: -2, j: 1 },
+    { i: -1, j: -2 }, { i: -1, j: 2 },
+    { i: 1, j: -2 }, { i: 1, j: 2 },
+    { i: 2, j: -1 }, { i: 2, j: 1 },
+  ];
   for (var i = 0; i < cols+1; i++) {
     for (var j = 0; j < rows+1; j++) {
       if (i < cols ) {
@@ -218,6 +224,15 @@ function addNeighbors() {
       if (i < cols && j < rows ) {
         grid[i][j].neighbors.push(grid[i + 1][j + 1]);
       }
+      knightMoves.forEach(move => {
+        const newI = i + move.i;
+        const newJ = j + move.j;
+        if (newI >= 0 && newI < cols && newJ >= 0 && newJ < rows) {
+          if (!isWallInBetween(grid[i][j], grid[newI][newJ])) {
+            grid[i][j].neighbors.push(grid[newI][newJ]);
+          }     
+        }
+      });
     }
   }
 }

@@ -34,6 +34,9 @@ function mousePressed() {
 
 function setup() {
   createCanvas(cols * res, rows * res, P2D);
+  
+  textLayer = createGraphics(cols * res, rows * res, P2D);
+
   pixelDensity(1);
   colorMode(RGB);
   background(50);

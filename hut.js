@@ -63,6 +63,8 @@ class Lord {
     for (let neighbor of castlePos.neighbors) {
       neighbor.occupied = true;
     }
+    // grid[this.i][this.j].wall = true;
+
 
     this.weight = 1;
     this.nr = nr; //not necessary
@@ -149,6 +151,7 @@ class Farmer {
     this.G=120 + random(50)
     this.B=50 + random(50)
     this.color = color(120 + random(50),120 + random(50),50 + random(50))
+    grid[this.i][this.j].wall = true;
     
     // pathFinding(grid[this.i][this.j], start, this.trafficWeight);
     // pathFinding(grid[this.i][this.j], end, this.trafficWeight);
@@ -343,7 +346,7 @@ class Merchant {
     }
 
     rectMode(CENTER);
-    rect(0, 0, res*0.6, res*0.8);
+    rect(0, 0, grid[this.i][this.j].merchantValue**0.3, res*0.8);
     rectMode(CORNER);
     pop();
   }
