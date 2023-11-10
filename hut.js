@@ -14,16 +14,31 @@ let castes = ["Lord", "Farmer", "Merchant"];
 // Farmer : security, farm value
 // merchant : security, traffic
 
-function autoPopulate() {
-  lord();
-  for (let i = 0; i < steps; i++) {
+function autoPopulate(i = 0) {
+  if (i === 0) {
+    lord(); // Call lord() only at the beginning
+  }
+
+  if (i < steps) {
     let dice = random(1);
     if (dice < 0.4) {
       merchantPopulate();
     } else {
       farmerPopulate();
     }
+    updateProgressBar(((i + 1) / steps) * 100);
+
+    // Schedule the next iteration
+    setTimeout(() => autoPopulate(i + 1), 0);
   }
+}
+
+function updateProgressBar(percent) {
+  let progressBar = select("#progress-bar");
+  progressBar.style("width", percent / 3 + "%");
+
+  // Update the text inside the progress bar
+  progressBar.html(Math.round(percent) + "%");
 }
 
 function lord() {
@@ -240,13 +255,13 @@ class Farmer {
   show() {
     colorMode(RGB);
     push();
-    translate(this.x + res / 4, this.y - res / 4);
+    translate(this.x + res / 8, this.y - res / 8);
     if (grid[this.i][this.j].rotate) {
       rotate(grid[this.i][this.j].rotate);
     }
     fill(0);
-    rect(0, 0, grid[this.i][this.j].farmerValue ** 0.3 * 3, res * 0.8);
-    circle(0, -this.treeSize * res, this.treeSize * res);
+    rect(0, 0, grid[this.i][this.j].farmerValue ** 0.35 * 3, res * 0.8);
+    circle(0, (this.treeSize * res) / 2, this.treeSize * res);
     pop();
     strokeWeight(0.5);
     stroke(0);
@@ -262,10 +277,10 @@ class Farmer {
 
     rectMode(CENTER);
     // rect(0, 0, res * 0.8, res * 0.8);
-    rect(0, 0, grid[this.i][this.j].farmerValue ** 0.3 * 3, res * 0.8);
+    rect(0, 0, grid[this.i][this.j].farmerValue ** 0.35 * 3, res * 0.8);
     fill(this.treeColor);
     noStroke();
-    circle(0, -this.treeSize * res, this.treeSize * res);
+    circle(0, (this.treeSize * res) / 2, this.treeSize * res);
     pop();
   }
   shadow() {
@@ -365,14 +380,14 @@ class Merchant {
     strokeWeight(0.5);
     stroke(0);
     noStroke();
-
+    let diameter = grid[this.i][this.j].trafficValue ** 0.4;
     push();
-    translate(this.x + res / 4, this.y - res / 4);
+    translate(this.x + res / 8, this.y - res / 8);
     if (grid[this.i][this.j].rotate) {
       rotate(grid[this.i][this.j].rotate);
     }
     fill(0);
-    rect(0, 0, grid[this.i][this.j].trafficValue ** 0.3, res * 0.8);
+    rect(0, 0, diameter, diameter * 0.8);
     pop();
 
     fill(this.color);
@@ -384,7 +399,7 @@ class Merchant {
 
     rectMode(CENTER);
     // rect(0, 0, res * 0.8, res * 0.8);
-    rect(0, 0, grid[this.i][this.j].trafficValue ** 0.3, res * 0.8);
+    rect(0, 0, diameter, diameter * 0.8);
 
     // rectMode(CORNER);
     pop();

@@ -19,7 +19,7 @@ const inputs = [
     callback: setSeed,
     default: 8,
   },
-  { label: "steps (int):", col: 3, row: 0, callback: autoStep, default: 300 },
+  { label: "steps (int):", col: 3, row: 0, callback: autoStep, default: 150 },
 ];
 
 let steps = inputs[1].default;
@@ -65,6 +65,16 @@ function gridPosition(col, row) {
     x: gridOrigin.x + col * gridSpacingX,
     y: gridOrigin.y + row * gridSpacingY,
   };
+}
+
+function setupProgressBar() {
+  let autoButtonPos = gridPosition(4, 0); // Position of the AUTO button
+  let progressBar = createDiv("");
+  progressBar.id("progress-bar");
+  progressBar.style("width", "0%");
+  progressBar.style("height", "20px");
+  progressBar.style("background-color", "pink").style("border", "1px solid");
+  progressBar.position(autoButtonPos.x, autoButtonPos.y + gridSpacingY); // Position below the button
 }
 
 function createGridButton(buttonConfig) {

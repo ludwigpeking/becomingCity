@@ -30,6 +30,7 @@ function setup() {
   coverPage();
   setupButtons();
   setupInputs();
+  setupProgressBar();
   // line 0 input
 }
 

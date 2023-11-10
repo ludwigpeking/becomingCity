@@ -304,3 +304,32 @@ function middleTilesOfKnightMove(tile1, tile2) {
     ];
   }
 }
+
+class PriorityQueue {
+  constructor() {
+    this.items = [];
+  }
+
+  enqueue(item, priority) {
+    let contain = false;
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i].priority > priority) {
+        this.items.splice(i, 0, { item, priority });
+        contain = true;
+        break;
+      }
+    }
+    if (!contain) {
+      this.items.push({ item, priority });
+    }
+  }
+
+  dequeue() {
+    if (this.isEmpty()) return null;
+    return this.items.shift().item;
+  }
+
+  isEmpty() {
+    return this.items.length === 0;
+  }
+}
