@@ -1,6 +1,6 @@
 // TODO: minimal buffer distance between huts, security cast from castle and huts
 // TODO: extents Hut class, community
-// TODO: 
+// TODO:
 
 let huts = [];
 let nr = 0;
@@ -14,16 +14,15 @@ let castes = ["Lord", "Farmer", "Merchant"];
 // Farmer : security, farm value
 // merchant : security, traffic
 
-function autoPopulate(){
-  lord()
-  for (let i = 0; i<steps; i++){
-    let dice =random(1)
-    if (dice < 0.4) {merchantPopulate()}
-    else{farmerPopulate()
-      
+function autoPopulate() {
+  lord();
+  for (let i = 0; i < steps; i++) {
+    let dice = random(1);
+    if (dice < 0.4) {
+      merchantPopulate();
+    } else {
+      farmerPopulate();
     }
- 
-    
   }
 }
 
@@ -65,7 +64,6 @@ class Lord {
     }
     // grid[this.i][this.j].wall = true;
 
-
     this.weight = 1;
     this.nr = nr; //not necessary
     this.control = []; //not clarified
@@ -76,7 +74,8 @@ class Lord {
       //   5 +
       //   log(1 / ((habit.i - castlePos.i) ** 2 + (habit.j - castlePos.j) ** 2)) /
       //     log(10);
-      habit.security += 100 / dist(habit.i, habit.j, castlePos.i, castlePos.j)**2;
+      habit.security +=
+        100 / dist(habit.i, habit.j, castlePos.i, castlePos.j) ** 2;
     }
   }
   makeBuffer() {
@@ -108,22 +107,23 @@ class Lord {
     stroke(0);
     rectMode(CENTER);
     fill(this.color);
-    rect(this.x , this.y , res * 2, res * 2);
-    circle(this.x , this.y , res*1.5);
-    circle(this.x - res , this.y -res, res);
-    circle(this.x + res , this.y+ res, res);
-    circle(this.x + res, this.y-res, res);
-    circle(this.x-res , this.y + res, res);
-    rectMode(CORNER);
+    rect(this.x, this.y, res * 2, res * 2);
+    circle(this.x, this.y, res * 1.5);
+    circle(this.x - res, this.y - res, res);
+    circle(this.x + res, this.y + res, res);
+    circle(this.x + res, this.y - res, res);
+    circle(this.x - res, this.y + res, res);
+    // rectMode(CORNER);
   }
-  shadow(){
+  shadow() {
     colorMode(RGB);
     strokeWeight(0.5);
     stroke(0);
     rectMode(CENTER);
-    fill(50)
-    rect(this.x  + 3, this.y  - 3, res * 2, res * 2)
-    rectMode(CORNER);
+    fill(50);
+    rect(this.x + 3, this.y - 3, res * 2, res * 2);
+
+    // rectMode(CORNER);
   }
 }
 
@@ -147,21 +147,28 @@ class Farmer {
     this.j = castlePos.j;
     this.x = this.i * res;
     this.y = this.j * res;
-    this.R =120 + random(50)
-    this.G=120 + random(50)
-    this.B=50 + random(50)
-    this.color = color(120 + random(50),120 + random(50),50 + random(50))
+    this.R = 120 + random(50);
+    this.G = 120 + random(50);
+    this.B = 50 + random(50);
+    this.color = color(120 + random(50), 120 + random(50), 50 + random(50));
+    this.treeColor = color(
+      20 + random(100),
+      120 + random(100),
+      20 + random(100)
+    );
+    this.treeSize = random(0.5, 1);
     grid[this.i][this.j].wall = true;
-    
+
     // pathFinding(grid[this.i][this.j], start, this.trafficWeight);
     // pathFinding(grid[this.i][this.j], end, this.trafficWeight);
-    if(castleTiles[0]){
+    if (castleTiles[0]) {
       pathFinding(castlePos, castleTiles[0], this.trafficWeight * 2);
     } else {
       pathFinding(castlePos, start, this.trafficWeight);
       pathFinding(castlePos, end, this.trafficWeight);
     }
     castlePos.attrition = 500;
+    castlePos.wall = true;
     castlePos.occupied = true;
     castlePos.occupiedBy = this;
     habitable = habitable.filter((item) => item !== castlePos);
@@ -202,8 +209,16 @@ class Farmer {
     }
   }
   makeBuffer() {
-    for (let u = this.i - round(this.buffer); u < this.i + round(this.buffer); u++) {
-      for (let v = this.j - round(this.buffer); v < this.j + round(this.buffer); v++) {
+    for (
+      let u = this.i - round(this.buffer);
+      u < this.i + round(this.buffer);
+      u++
+    ) {
+      for (
+        let v = this.j - round(this.buffer);
+        v < this.j + round(this.buffer);
+        v++
+      ) {
         if (
           u >= 0 &&
           u < cols &&
@@ -224,31 +239,41 @@ class Farmer {
   }
   show() {
     colorMode(RGB);
+    push();
+    translate(this.x + res / 4, this.y - res / 4);
+    if (grid[this.i][this.j].rotate) {
+      rotate(grid[this.i][this.j].rotate);
+    }
+    fill(0);
+    rect(0, 0, grid[this.i][this.j].farmerValue ** 0.3 * 3, res * 0.8);
+    circle(0, -this.treeSize * res, this.treeSize * res);
+    pop();
     strokeWeight(0.5);
     stroke(0);
-    fill(this.R + 120, this.G+110, this.B + 110);
-    
-    
+    noStroke();
+
+    fill(this.R + 120, this.G + 110, this.B + 110);
+
     push();
-    translate(this.x , this.y );
+    translate(this.x, this.y);
     if (grid[this.i][this.j].rotate) {
       rotate(grid[this.i][this.j].rotate);
     }
 
     rectMode(CENTER);
-    rect(0, 0, res*0.8, res*0.8);
-    rectMode(CORNER);
+    // rect(0, 0, res * 0.8, res * 0.8);
+    rect(0, 0, grid[this.i][this.j].farmerValue ** 0.3 * 3, res * 0.8);
+    fill(this.treeColor);
+    noStroke();
+    circle(0, -this.treeSize * res, this.treeSize * res);
     pop();
-    
-    
   }
-  shadow(){
+  shadow() {
     colorMode(RGB);
-    noStroke()
+    noStroke();
     fill(30);
-    ellipse(this.x  +2, this.y -2, 1.1 * res, 1.1 * res);
+    ellipse(this.x + 2, this.y - 2, 1.1 * res, 1.1 * res);
   }
-  
 }
 function merchantPopulate() {
   merchantValue();
@@ -256,7 +281,6 @@ function merchantPopulate() {
   huts.push(newCastle);
   nr++;
   newCastle.makeBuffer();
-  merchantValue();
 }
 class Merchant {
   constructor() {
@@ -272,9 +296,11 @@ class Merchant {
 
     pathFinding(grid[this.i][this.j], start, this.trafficWeight);
     pathFinding(grid[this.i][this.j], end, this.trafficWeight);
-    pathFinding(grid[this.i][this.j], castleTiles[0], this.trafficWeight * 2);
+    if (castleTiles[0])
+      pathFinding(grid[this.i][this.j], castleTiles[0], this.trafficWeight * 2);
     castlePos.attrition = 500;
     castlePos.occupied = true;
+    castlePos.wall = true;
     castlePos.occupiedBy = this;
     habitable = habitable.filter((item) => item !== castlePos);
     tilesCentralHabitable = tilesCentralHabitable.filter(
@@ -318,9 +344,9 @@ class Merchant {
       for (let v = this.j - this.buffer; v < this.j + this.buffer; v++) {
         if (
           u >= 0 &&
-          u < cols+1 &&
+          u < cols + 1 &&
           v >= 0 &&
-          v < rows+1 &&
+          v < rows + 1 &&
           dist(this.i, this.j, u, v) <= this.buffer
         ) {
           grid[u][v].buffer = true;
@@ -338,34 +364,47 @@ class Merchant {
     colorMode(RGB);
     strokeWeight(0.5);
     stroke(0);
+    noStroke();
+
+    push();
+    translate(this.x + res / 4, this.y - res / 4);
+    if (grid[this.i][this.j].rotate) {
+      rotate(grid[this.i][this.j].rotate);
+    }
+    fill(0);
+    rect(0, 0, grid[this.i][this.j].trafficValue ** 0.3, res * 0.8);
+    pop();
+
     fill(this.color);
     push();
-    translate(this.x , this.y );
+    translate(this.x, this.y);
     if (grid[this.i][this.j].rotate) {
       rotate(grid[this.i][this.j].rotate);
     }
 
     rectMode(CENTER);
-    rect(0, 0, grid[this.i][this.j].merchantValue**0.3, res*0.8);
-    rectMode(CORNER);
+    // rect(0, 0, res * 0.8, res * 0.8);
+    rect(0, 0, grid[this.i][this.j].trafficValue ** 0.3, res * 0.8);
+
+    // rectMode(CORNER);
     pop();
   }
-  shadow(){
+  shadow() {
     colorMode(RGB);
     noStroke();
     stroke(0);
-    
+
     push();
-    translate(this.x  +2, this.y  -2);
+    translate(this.x + 2, this.y - 2);
     if (grid[this.i][this.j].rotate) {
       rotate(grid[this.i][this.j].rotate);
     }
 
     rectMode(CENTER);
     fill(30);
-    rect(0, 0, res*0.6, res*0.8);
+    rect(0, 0, res * 0.6, res * 0.8);
     fill(30);
-    rectMode(CORNER);
+    // rectMode(CORNER);
     pop();
   }
 }

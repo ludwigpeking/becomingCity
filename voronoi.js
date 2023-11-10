@@ -1,12 +1,8 @@
 function voronoize() {
   //Create an Image
   let margins = [];
-  colorMode(RGB)
+  colorMode(RGB);
 
-  //Load all Pixels
-  console.log(huts)
-  
-  
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       if (
@@ -26,17 +22,19 @@ function voronoize() {
         let min = 1000;
 
         grid[i][j].allDist.sort((a, b) => (a.dist > b.dist ? 1 : -1));
-        if (grid[i][j].allDist[0].dist < claimRange){
+        if (grid[i][j].allDist[0].dist < claimRange) {
           grid[i][j].belong = grid[i][j].allDist[0].occupiedBy;
           grid[i][j].allDist[0].occupiedBy.control.push(grid[i][j]);
           grid[i][j].attrition = 4;
           fill(grid[i][j].allDist[0].occupiedBy.color);
-          noStroke()
-          rectMode(CENTER)
+          noStroke();
+          rectMode(CENTER);
           rect(i * res, j * res, res, res);
         }
-        if(abs(grid[i][j].allDist[0].dist - grid[i][j].allDist[1].dist) <= 0.1 &&
-          grid[i][j].allDist[0].dist< claimRange){
+        if (
+          abs(grid[i][j].allDist[0].dist - grid[i][j].allDist[1].dist) <= 0.1 &&
+          grid[i][j].allDist[0].dist < claimRange
+        ) {
           grid[i][j].attrition = 1;
           margins.push(grid[i][j]);
         }

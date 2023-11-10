@@ -81,7 +81,7 @@ class Tile {
 
 function tiling() {
   noiseSeed(seed);
-  colorMode(RGB)
+  colorMode(RGB);
   for (let i = 0; i < cols + 1; i++) {
     grid.push([]);
     for (let j = 0; j < rows + 1; j++) {
@@ -116,7 +116,7 @@ function tiling() {
       if (grid[i][j].altitude <= waterLevel) {
         grid[i][j].attrition = 1;
         grid[i][j].water = true;
-        grid[i][j].altitude = -14
+        grid[i][j].altitude = -14;
         waters.push(grid[i][j]);
         noStroke();
         fill(100, 200, 255);
@@ -180,7 +180,7 @@ function tiling() {
       } else {
         let altitudeChange = 0;
         for (let neighbor of grid[i][j].neighbors) {
-          for (let subNeighbor of neighbor.neighbors){
+          for (let subNeighbor of neighbor.neighbors) {
             altitudeChange += grid[i][j].altitude - subNeighbor.altitude;
           }
         }
@@ -193,20 +193,24 @@ function tiling() {
 
 function addNeighbors() {
   const knightMoves = [
-    { i: -2, j: -1 }, { i: -2, j: 1 },
-    { i: -1, j: -2 }, { i: -1, j: 2 },
-    { i: 1, j: -2 }, { i: 1, j: 2 },
-    { i: 2, j: -1 }, { i: 2, j: 1 },
+    { i: -2, j: -1 },
+    { i: -2, j: 1 },
+    { i: -1, j: -2 },
+    { i: -1, j: 2 },
+    { i: 1, j: -2 },
+    { i: 1, j: 2 },
+    { i: 2, j: -1 },
+    { i: 2, j: 1 },
   ];
-  for (var i = 0; i < cols+1; i++) {
-    for (var j = 0; j < rows+1; j++) {
-      if (i < cols ) {
+  for (var i = 0; i < cols + 1; i++) {
+    for (var j = 0; j < rows + 1; j++) {
+      if (i < cols) {
         grid[i][j].neighbors.push(grid[i + 1][j]);
       }
       if (i > 0) {
         grid[i][j].neighbors.push(grid[i - 1][j]);
       }
-      if (j < rows ) {
+      if (j < rows) {
         grid[i][j].neighbors.push(grid[i][j + 1]);
       }
       if (j > 0) {
@@ -215,22 +219,22 @@ function addNeighbors() {
       if (i > 0 && j > 0) {
         grid[i][j].neighbors.push(grid[i - 1][j - 1]);
       }
-      if (i < cols  && j > 0) {
+      if (i < cols && j > 0) {
         grid[i][j].neighbors.push(grid[i + 1][j - 1]);
       }
-      if (i > 0 && j < rows ) {
+      if (i > 0 && j < rows) {
         grid[i][j].neighbors.push(grid[i - 1][j + 1]);
       }
-      if (i < cols && j < rows ) {
+      if (i < cols && j < rows) {
         grid[i][j].neighbors.push(grid[i + 1][j + 1]);
       }
-      knightMoves.forEach(move => {
+      knightMoves.forEach((move) => {
         const newI = i + move.i;
         const newJ = j + move.j;
         if (newI >= 0 && newI < cols && newJ >= 0 && newJ < rows) {
           if (!isWallInBetween(grid[i][j], grid[newI][newJ])) {
             grid[i][j].neighbors.push(grid[newI][newJ]);
-          }     
+          }
         }
       });
     }
@@ -239,12 +243,7 @@ function addNeighbors() {
 
 function mapEdgeDefine() {
   for (let tile of tiles) {
-    if (
-      tile.i == 0 ||
-      tile.i == cols  ||
-      tile.j == 0 ||
-      tile.j == rows 
-    ) {
+    if (tile.i == 0 || tile.i == cols || tile.j == 0 || tile.j == rows) {
       mapEdge.push(tile);
       // fill(255,0,0)
       // rect(tile.x,tile.y, res,res)

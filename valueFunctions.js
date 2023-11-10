@@ -4,20 +4,23 @@ function terrainDefense() {
   colorMode(RGB); // Try changing to HSB.
   let interA = lerpColor(from, to, 0.33);
   let interB = lerpColor(from, to, 0.66);
-  
-  
+
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       if (grid[i][j].defense > 0) {
         noStroke();
-        colorMode(RGB)
-        let fillColor = lerpColor(from, to, grid[i][j].defense/1200);
+        colorMode(RGB);
+        let fillColor = lerpColor(from, to, grid[i][j].defense / 1200);
         fill(fillColor);
-        rectMode(CENTER)
+        rectMode(CENTER);
         rect(grid[i][j].x, grid[i][j].y, res, res);
-        fill(0)
-        textSize(res*0.8)
-        text(round(grid[i][j].defense/100),grid[i][j].x+res/3, grid[i][j].y+res/3)
+        fill(0);
+        textSize(res * 0.8);
+        text(
+          round(grid[i][j].defense / 100),
+          grid[i][j].x + res / 3,
+          grid[i][j].y + res / 3
+        );
       }
     }
   }
@@ -42,8 +45,9 @@ function waterValue() {
             dist(water.i, water.j, grid[u][v].i, grid[u][v].j) < waterAccessDist
           ) {
             grid[u][v].waterAccess = true;
-            if(!wateredArea.includes(grid[u][v])){
-              wateredArea.push(grid[u][v])}
+            if (!wateredArea.includes(grid[u][v])) {
+              wateredArea.push(grid[u][v]);
+            }
           }
         }
       }
@@ -55,7 +59,7 @@ function waterValueShow() {
   for (let area of wateredArea) {
     noStroke();
     colorMode(RGB);
-    fill(0, 0, 255,50);
+    fill(0, 0, 255, 50);
     rect(area.x, area.y, res, res);
   }
 }
@@ -68,7 +72,7 @@ function farmValue() {
   for (let farm of farms) {
     for (let u = farm.i - farmerRange; u < farm.i + farmerRange; u++) {
       for (let v = farm.j - farmerRange; v < farm.j + farmerRange; v++) {
-        if (u >= 0 && u < cols+1 && v >= 0 && v < rows+1) {
+        if (u >= 0 && u < cols + 1 && v >= 0 && v < rows + 1) {
           if (
             grid[u][v].wall == false &&
             grid[u][v].water == false &&
@@ -84,70 +88,67 @@ function farmValue() {
     }
   }
   for (let habit of habitable) {
-    habit.farmerValue = habit.farmValue / 20 * sqrt(habit.security); //farmer's preference
-    
+    habit.farmerValue = (habit.farmValue / 20) * sqrt(habit.security); //farmer's preference
   }
 }
 
 function farmValueShow() {
   colorMode(HSB);
-  for (let lot of habitable){
-      fill(100 - lot.farmValue *0.1, 100, 100);
-      //fill( lot.farmValue, 255 - lot.farmValue, 0);
-      noStroke();
-      rect(lot.x, lot.y, res, res);
-      fill(0)
-    textSize(8)
-      text(round(lot.farmValue/15), lot.x+res/3,lot.y+res/3)
+  for (let lot of habitable) {
+    fill(100 - lot.farmValue * 0.1, 100, 100);
+    //fill( lot.farmValue, 255 - lot.farmValue, 0);
+    noStroke();
+    rect(lot.x, lot.y, res, res);
+    fill(0);
+    textSize(8);
+    text(round(lot.farmValue / 15), lot.x + res / 3, lot.y + res / 3);
   }
-  colorMode(RGB)
+  colorMode(RGB);
 }
 
 function farmerValueShow() {
   colorMode(HSB);
-  for (let lot of habitable){
-      fill(sqrt(lot.farmerValue)*3, 100, 100);
-      //fill( lot.farmValue, 255 - lot.farmValue, 0);
-      noStroke();
-    rectMode(CENTER)
-      rect(lot.x, lot.y, res, res);
-      fill(0)
-    textSize(8)
-      text(round(sqrt(lot.farmerValue))*3, lot.x+res/3,lot.y+res/3)
+  for (let lot of habitable) {
+    fill(sqrt(lot.farmerValue) * 3, 100, 100);
+    //fill( lot.farmValue, 255 - lot.farmValue, 0);
+    noStroke();
+    rectMode(CENTER);
+    rect(lot.x, lot.y, res, res);
+    fill(0);
+    textSize(8);
+    text(round(sqrt(lot.farmerValue)) * 3, lot.x + res / 3, lot.y + res / 3);
   }
-  colorMode(RGB)
+  colorMode(RGB);
 }
 
-function securityValueShow(){
+function securityValueShow() {
   for (let habit of habitable) {
     noStroke();
     colorMode(RGB);
-    rectMode(CENTER)
-    fill(255, 200, 0, habit.security*50)
-    rect(habit.x, habit.y, res, res);    
-    fill(0)
-    textAlign(CENTER,CENTER)
-    textSize(8)
-    text(round(habit.security), habit.x, habit.y)
+    rectMode(CENTER);
+    fill(255, 200, 0, habit.security * 50);
+    rect(habit.x, habit.y, res, res);
+    fill(0);
+    textAlign(CENTER, CENTER);
+    textSize(8);
+    text(round(habit.security), habit.x, habit.y);
   }
 }
 
-function merchantValue(){
-  for (let habit of habitable){
-    habit.merchantValue = habit.security * habit.trafficValue
+function merchantValue() {
+  for (let tile of tiles) {
+    tile.merchantValue = tile.security * tile.trafficValue;
   }
 }
 
-function newcomerValue(){
-  for (let habit of habitable){
-    habit.merchantValue = habit.security * habit.trafficValue
+function newcomerValue() {
+  for (let tile of tiles) {
+    tile.merchantValue = tile.security * tile.trafficValue;
   }
 }
 
-function merchantValueShow(){
-  for (let habit of habitable){
-    habit.merchantValue = habit.security * habit.trafficValue
+function merchantValueShow() {
+  for (let habit of habitable) {
+    habit.merchantValue = habit.security * habit.trafficValue;
   }
 }
-
-
